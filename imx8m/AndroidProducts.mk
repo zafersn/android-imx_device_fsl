@@ -41,3 +41,4 @@ COMMON_LUNCH_CHOICES := \
   evk_8mn-userdebug \
   evk_8mp-user \
   evk_8mp-userdebug
+asdas
