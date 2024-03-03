@@ -35,12 +35,13 @@ build_m4_image()
 build_imx_uboot()
 {
 	echo Building i.MX U-Boot with firmware
+	# echo "zfr: UBOOT_OUT: ${UBOOT_OUT} | IMX_MKIMAGE_PATH: ${IMX_MKIMAGE_PATH}"  
 	cp ${UBOOT_OUT}/u-boot-nodtb.$1 ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
 	cp ${UBOOT_OUT}/spl/u-boot-spl.bin ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
 	cp ${UBOOT_OUT}/tools/mkimage ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/mkimage_uboot
-	cp ${UBOOT_OUT}/arch/arm/dts/imx8mq-evk.dtb  ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
+	cp ${UBOOT_OUT}/arch/arm/dts/maaxboard.dtb  ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/imx8mq-ddr4-val.dtb
 	cp ${FSL_PROPRIETARY_PATH}/linux-firmware-imx/firmware/hdmi/cadence/signed_hdmi_imx8m.bin  ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
-	cp ${FSL_PROPRIETARY_PATH}/linux-firmware-imx/firmware/ddr/synopsys/lpddr4_pmu_train* ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
+	cp ${FSL_PROPRIETARY_PATH}/linux-firmware-imx/firmware/ddr/synopsys/ddr4* ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/
 
 	# build ATF based on whether tee is involved
 	make -C ${IMX_PATH}/arm-trusted-firmware/ PLAT=`echo $2 | cut -d '-' -f1` clean
@@ -59,11 +60,14 @@ build_imx_uboot()
 	cp ${IMX_PATH}/arm-trusted-firmware/build/`echo $2 | cut -d '-' -f1`/release/bl31.bin ${IMX_MKIMAGE_PATH}/imx-mkimage/iMX8M/bl31.bin
 
 	make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ clean
-	if [ `echo $2 | rev | cut -d '-' -f1 | rev` != "dual" ]; then
-		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M flash_hdmi_spl_uboot || exit 1
+	if [ `echo $2 | cut -d '-' -f2` = "ddr4" ]; then
+		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M  flash_ddr4_val || exit 1
+		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M print_fit_hab_ddr4 || exit 1
+	elif [ `echo $2 | rev | cut -d '-' -f1 | rev` != "dual" ]; then
+		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M flash_spl_uboot || exit 1
 		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M print_fit_hab || exit 1
 	else
-		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M flash_evk_dual_bootloader || exit 1
+		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M flash_evk_no_hdmi_dual_bootloader || exit 1
 		make -C ${IMX_MKIMAGE_PATH}/imx-mkimage/ SOC=iMX8M PRINT_FIT_HAB_OFFSET=0x0 print_fit_hab || exit 1
 	fi
 	if [ `echo $2 | rev | cut -d '-' -f1 | rev` != "dual" ]; then

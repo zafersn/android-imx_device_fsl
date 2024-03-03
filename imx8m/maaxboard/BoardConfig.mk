@@ -65,7 +65,7 @@ else
   endif
 endif
 
-BOARD_PREBUILT_DTBOIMAGE := $(OUT_DIR)/target/product/$(PRODUCT_DEVICE)/dtbo-imx8mq-wevk.img
+BOARD_PREBUILT_DTBOIMAGE := $(OUT_DIR)/target/product/$(PRODUCT_DEVICE)/dtbo-imx8mq.img
 
 BOARD_USES_METADATA_PARTITION := true
 BOARD_ROOT_EXTRA_FOLDERS += metadata
@@ -107,19 +107,34 @@ DEVICE_MATRIX_FILE := $(IMX_DEVICE_PATH)/compatibility_matrix.xml
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := $(IMX_DEVICE_PATH)/device_framework_matrix.xml
 
 # -------@block_wifi-------
-BOARD_WLAN_DEVICE            := nxp
+BOARD_WLAN_DEVICE            := bcmdhd
 WPA_SUPPLICANT_VERSION       := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER  := NL80211
 BOARD_HOSTAPD_DRIVER         := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB           := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB    := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 
+WIFI_DRIVER_FW_PATH_PARAM      := "/sys/module/brcmfmac/parameters/alternative_fw_path"
+
 WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 
+
+# NXP 8987 wifi driver module
+BOARD_VENDOR_KERNEL_MODULES += \
+                            $(KERNEL_OUT)/drivers/net/wireless/broadcom/brcm80211/brcmfmac/brcmfmac.ko \
+                            $(KERNEL_OUT)/drivers/net/wireless/broadcom/brcm80211/brcmutil/brcmutil.ko
+
+# BOARD_VENDOR_KERNEL_MODULES += \
+#     $(TARGET_OUT_INTERMEDIATES)/MXMWIFI_OBJ/mlan.ko \
+#     $(TARGET_OUT_INTERMEDIATES)/MXMWIFI_OBJ/moal.ko
+    
 # -------@block_bluetooth-------
 # NXP 8997 BT
-BOARD_HAVE_BLUETOOTH_NXP := true
+# BOARD_HAVE_BLUETOOTH_NXP := true
+# BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(IMX_DEVICE_PATH)/bluetooth
+BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(IMX_DEVICE_PATH)/bluetooth
+
 
 # -------@block_sensor-------
 BOARD_USE_SENSOR_FUSION := true
@@ -143,7 +158,7 @@ BOARD_KERNEL_CMDLINE += transparent_hugepage=never cma=$(CMASIZE)
 BOARD_BOOTCONFIG += androidboot.lcd_density=240 androidboot.primary_display=imx-dcss androidboot.gui_resolution=1080p
 
 # wifi config
-BOARD_BOOTCONFIG += androidboot.wificountrycode=CN
+BOARD_BOOTCONFIG += androidboot.wificountrycode=IE
 BOARD_KERNEL_CMDLINE += moal.mod_para=wifi_mod_para.conf pci=nomsi
 
 ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
@@ -157,8 +172,8 @@ ifeq ($(TARGET_USE_DYNAMIC_PARTITIONS),true)
     ifeq ($(LOADABLE_KERNEL_MODULE),true)
       # imx8mq gki with HDMI display
       TARGET_BOARD_DTS_CONFIG ?= imx8mq:imx8mq-evk-pcie1-m2-gki.dtb
-      # imx8mq gki with HDMI display on WEVK board
-      TARGET_BOARD_DTS_CONFIG += imx8mq-wevk:imx8mq-evk-gki.dtb
+      # # imx8mq gki with HDMI display on WEVK board
+      # TARGET_BOARD_DTS_CONFIG += imx8mq-wevk:imx8mq-evk-gki.dtb
       # imx8mq with MIPI-HDMI display
       TARGET_BOARD_DTS_CONFIG += imx8mq-mipi:imx8mq-evk-lcdif-adv7535-gki.dtb
       # imx8mq with HDMI and MIPI-HDMI display
@@ -170,8 +185,8 @@ ifeq ($(TARGET_USE_DYNAMIC_PARTITIONS),true)
     else
       # imx8mq with HDMI display
       TARGET_BOARD_DTS_CONFIG ?= imx8mq:imx8mq-evk-pcie1-m2.dtb
-      # imx8mq with HDMI display on WEVK board
-      TARGET_BOARD_DTS_CONFIG += imx8mq-wevk:imx8mq-evk.dtb
+      # # imx8mq with HDMI display on WEVK board
+      # TARGET_BOARD_DTS_CONFIG += imx8mq-wevk:imx8mq-evk.dtb
       # imx8mq with MIPI-HDMI display
       TARGET_BOARD_DTS_CONFIG += imx8mq-mipi:imx8mq-evk-lcdif-adv7535.dtb
       # imx8mq with HDMI and MIPI-HDMI display

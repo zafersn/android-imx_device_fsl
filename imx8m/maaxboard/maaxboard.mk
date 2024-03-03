@@ -17,9 +17,9 @@ include $(CONFIG_REPO_PATH)/imx8m/ProductConfigCommon.mk
 # -------@block_common_config-------
 
 # Overrides
-PRODUCT_NAME := evk_8mq
-PRODUCT_DEVICE := evk_8mq
-PRODUCT_MODEL := EVK_8MQ
+PRODUCT_NAME := maaxboard
+PRODUCT_DEVICE := maaxboard
+PRODUCT_MODEL := MAAXBOARD
 
 TARGET_BOOTLOADER_BOARD_NAME := EVK
 
@@ -131,22 +131,22 @@ PRODUCT_COPY_FILES += \
 
 TARGET_RECOVERY_FSTAB = $(IMX_DEVICE_PATH)/fstab.nxp
 
-ifneq ($(filter TRUE true 1,$(IMX_OTA_POSTINSTALL)),)
-  PRODUCT_PACKAGES += imx_ota_postinstall
+# ifneq ($(filter TRUE true 1,$(IMX_OTA_POSTINSTALL)),)
+#   PRODUCT_PACKAGES += imx_ota_postinstall
 
-  AB_OTA_POSTINSTALL_CONFIG += \
-    RUN_POSTINSTALL_vendor=true \
-    POSTINSTALL_PATH_vendor=bin/imx_ota_postinstall \
-    FILESYSTEM_TYPE_vendor=erofs \
-    POSTINSTALL_OPTIONAL_vendor=false
+#   AB_OTA_POSTINSTALL_CONFIG += \
+#     RUN_POSTINSTALL_vendor=true \
+#     POSTINSTALL_PATH_vendor=bin/imx_ota_postinstall \
+#     FILESYSTEM_TYPE_vendor=erofs \
+#     POSTINSTALL_OPTIONAL_vendor=false
 
-  PRODUCT_COPY_FILES += \
-    $(OUT_DIR)/target/product/$(firstword $(PRODUCT_DEVICE))/obj/UBOOT_COLLECTION/spl-imx8mq-trusty-wevk-dual.bin:$(TARGET_COPY_OUT_VENDOR)/etc/bootloader0.img
-  ifeq ($(BUILD_ENCRYPTED_BOOT),true)
-    PRODUCT_COPY_FILES += \
-      $(OUT_DIR)/target/product/$(firstword $(PRODUCT_DEVICE))/obj/UBOOT_COLLECTION/bootloader-imx8mq-trusty-wevk-dual.img:$(TARGET_COPY_OUT_VENDOR)/etc/bootloader_ab.img
-  endif
-endif
+#   PRODUCT_COPY_FILES += \
+#     $(OUT_DIR)/target/product/$(firstword $(PRODUCT_DEVICE))/obj/UBOOT_COLLECTION/spl-imx8mq-trusty-dual.bin:$(TARGET_COPY_OUT_VENDOR)/etc/bootloader0.img
+#   ifeq ($(BUILD_ENCRYPTED_BOOT),true)
+#     PRODUCT_COPY_FILES += \
+#       $(OUT_DIR)/target/product/$(firstword $(PRODUCT_DEVICE))/obj/UBOOT_COLLECTION/bootloader-imx8mq-trusty-dual.img:$(TARGET_COPY_OUT_VENDOR)/etc/bootloader_ab.img
+#   endif
+# endif
 
 # fastboot_imx_flashall scripts, fsl-sdcard-partition script and uuu_imx_android_flash scripts
 PRODUCT_COPY_FILES += \

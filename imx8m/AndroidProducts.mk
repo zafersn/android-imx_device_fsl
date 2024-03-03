@@ -30,7 +30,9 @@ PRODUCT_MAKEFILES := \
   $(LOCAL_DIR)/evk_8mq/evk_8mq.mk \
   $(LOCAL_DIR)/evk_8mm/evk_8mm.mk \
   $(LOCAL_DIR)/evk_8mn/evk_8mn.mk \
-  $(LOCAL_DIR)/evk_8mp/evk_8mp.mk
+  $(LOCAL_DIR)/evk_8mp/evk_8mp.mk \
+  $(LOCAL_DIR)/maaxboard/maaxboard.mk 
+
 
 COMMON_LUNCH_CHOICES := \
   evk_8mq-user \
@@ -40,5 +42,6 @@ COMMON_LUNCH_CHOICES := \
   evk_8mn-user \
   evk_8mn-userdebug \
   evk_8mp-user \
-  evk_8mp-userdebug
-asdas
+  evk_8mp-userdebug\
+  maaxboard-user \
+  maaxboard-userdebug
